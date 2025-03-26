@@ -7,6 +7,8 @@ import { z } from "zod"
 import Image from "next/image"
 import FormField from "./FormField"
 import Link from "next/link"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 const authFormSchema = (type: FormType) => {
     return z.object({
@@ -19,20 +21,31 @@ const authFormSchema = (type: FormType) => {
 const AuthForm = ({ type }: { type: FormType }) => {
 
     const formSchema = authFormSchema(type)
+    const router = useRouter()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
             email: "",
+            password: "",
         },
     })
 
 
-    // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+        try {
+            if (type === "sign-up") {
+                toast.success('Account created successfully. Please sign in.')
+                router.push('/sign-in')
+            } else {
+                toast.success('Sign in successfully. Please sign in.')
+                router.push('/')
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(`There was an error: ${error}`)
+        }
         console.log(values)
     }
 
@@ -49,10 +62,11 @@ const AuthForm = ({ type }: { type: FormType }) => {
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 mt-4 form">
-                        {!isSignIn && <p>Name</p>}
-                        <p>Email</p>
-                        <p>Password</p>
-                        {/* <FormField form={form} /> */}
+                        {!isSignIn && (
+                            <FormField control={form.control} label="Name" type="text" name={"name"} placeholder="Your Name" />
+                        )}
+                        <FormField control={form.control} label="Email" type="email" name={"email"} placeholder="Your email address" />
+                        <FormField control={form.control} label="Password" type="password" name={"password"} placeholder="Enter your password" />
                         <Button type="submit" className="btn">{isSignIn ? "Sign In" : "Create an Account"}</Button>
                     </form>
                 </Form>

@@ -3,23 +3,25 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { z } from "zod"
 import Image from "next/image"
 import FormField from "./FormField"
 import Link from "next/link"
 
-const AuthForm = ({ type }: { type: FormType }) => {
-    const authFormSchema = (type: FormType) => {
-        return z.object({
-            name: type === "sign-up" ? z.string().min(2) : z.string().optional(),
-            email: z.string().email(),
-            password: z.string().min(3)
-        })
-    }
+const authFormSchema = (type: FormType) => {
+    return z.object({
+        name: type === "sign-up" ? z.string().min(2) : z.string().optional(),
+        email: z.string().email(),
+        password: z.string().min(3)
+    })
+}
 
-    const form = useForm<z.infer<typeof authFormSchema>>({
-        resolver: zodResolver(authFormSchema),
+const AuthForm = ({ type }: { type: FormType }) => {
+
+    const formSchema = authFormSchema(type)
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
             email: "",

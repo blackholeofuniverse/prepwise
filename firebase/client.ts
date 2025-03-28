@@ -1,7 +1,6 @@
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase-admin/auth";
-import { getFirestore } from "@firebase/firestore"
-import { getApp, getApps, initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"
+import { getApp, getApps, initializeApp } from "firebase/app";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA64Ol1ShmMWWV-Q2E_JGGVC-jYV02v5wM",
